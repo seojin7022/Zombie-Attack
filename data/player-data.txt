@@ -1,0 +1,1 @@
+{"PlayerData": {"Stats": {"Attack": 1, "Defense": 1}, "Mastery": {}, "Coin": 0, "ZombieStone": 0, "Equipments": [], "Magics": {}}}
