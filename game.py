@@ -1,23 +1,30 @@
-import pygame
+import pygame, gameMath
+from characterManager import Character, Zombie
 
 
 def createMap():
-    return pygame.image.load(f"./img/Map.png")
+    return pygame.image.load(f"./img/Tile1.png")
 
 
 player_pos = (0, 0)
 
-Maps = [((i - 1) * 1200, (j - 1) * 675) for i in range(0, 3) for j in range(0, 3)]
+Maps = [((i - 1) * 100, (j - 1) * 100) for i in range(15) for j in range(10)]
+MapsImage = [createMap() for i in range(150)]
 
 WDown = False
 SDown = False
 ADown = False
 DDown = False
 
+zombies = []
+
 
 def Game(screen, data):
     global player_pos, WDown, SDown, ADown, DDown
+    zombies.append(Zombie("WeakZombie", (0, 300)))
+    player = Character("WeakZombie", (500, 200), currentState="Walk")
     while True:
+        pygame.time.Clock().tick(120)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -58,15 +65,33 @@ def Game(screen, data):
         if DDown:
             player_pos = (player_pos[0] - 5, player_pos[1])
 
+        if WDown or SDown or ADown or DDown:
+            player.NextFrame()
+        else:
+            player.StopAnimation()
+
         screen.fill((0, 0, 0))
         for i in range(len(Maps)):
             screen.blit(
-                createMap(),
+                MapsImage[i],
                 (
                     Maps[i][0]
-                    + min(max(player_pos[0], -1), 1) * (abs(player_pos[0]) % 1200),
+                    + min(max(player_pos[0], -1), 1) * (abs(player_pos[0]) % 100),
                     Maps[i][1]
-                    + min(max(player_pos[1], -1), 1) * (abs(player_pos[1]) % 675),
+                    + min(max(player_pos[1], -1), 1) * (abs(player_pos[1]) % 100),
                 ),
             )
+
+        for v in zombies:
+            v.pos = gameMath.GetPositionWithDistance(
+                v.pos, (player_pos[0], player_pos[1]), 2
+            )
+            screen.blit(
+                v.PlayAnimation(),
+                (
+                    500 + player_pos[0] - v.pos[0],
+                    200 + player_pos[1] - v.pos[1],
+                ),
+            )
+        screen.blit(player.PlayAnimation(), player.pos)
         pygame.display.flip()
