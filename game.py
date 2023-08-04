@@ -1,5 +1,5 @@
 import pygame, gameMath
-from characterManager import Character, Zombie
+from characterManager import Character, Zombie, Equipment
 
 
 def createMap():
@@ -23,6 +23,7 @@ def Game(screen, data):
     global player_pos, WDown, SDown, ADown, DDown
     zombies.append(Zombie("WeakZombie", (0, 300)))
     player = Character("WeakZombie", (500, 200), currentState="Walk")
+    player.equipments.append(Equipment("Sword"))
     while True:
         pygame.time.Clock().tick(120)
         for event in pygame.event.get():
@@ -94,4 +95,6 @@ def Game(screen, data):
                 ),
             )
         screen.blit(player.PlayAnimation(), player.pos)
+        for v in player.equipments:
+            screen.blit(v.image, player.pos)
         pygame.display.flip()

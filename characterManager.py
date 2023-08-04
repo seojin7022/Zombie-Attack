@@ -10,7 +10,7 @@ class Character:
         self.animationNum = 0
         self.currentState = currentState
         self.pos = pos
-
+        self.equipments = []
         self.tick = 0
 
     def LoadImage(self) -> dict:
@@ -56,3 +56,9 @@ class Zombie(Character):
     def Walk(self):
         self.NextFrame()
         return self.animation["Walk"][self.animationNum]
+
+
+class Equipment:
+    def __init__(self, name) -> None:
+        self.image = pygame.image.load(f"./img/{name}.PNG")
+        self.pos = (0, 0)
