@@ -1,4 +1,4 @@
-import pygame, gameMath, gameOver
+import pygame, gameMath, gameOver, random
 from characterManager import Character, Zombie, Equipment
 from guiManager import GUI, Button
 
@@ -12,7 +12,10 @@ def createMap():
 player_pos = (0, 0)
 
 Maps = [((i - 1) * 100, (j - 1) * 100) for i in range(15) for j in range(10)]
-MapsImage = [createMap() for i in range(150)]
+MapsImage = [(createMap(), Maps[i]) for i in range(150)]
+
+Map = pygame.Surface((1200, 675))
+Map.blits(MapsImage)
 
 WDown = False
 SDown = False
@@ -21,12 +24,28 @@ DDown = False
 
 zombies = []
 
+spawnPoints = [
+    (-700, -500),
+    (-700, 0),
+    (-700, 500),
+    (700, -500),
+    (700, 0),
+    (700, 500),
+    (0, -500),
+    (0, 0),
+    (0, 500),
+]
+
 
 def Game(screen, data):
     global player_pos, WDown, SDown, ADown, DDown
-    zombies.append(Zombie("WeakZombie", (0, 300)))
     player = Character("Player", (500, 200))
     player.data = data
+
+    pygame.time.set_timer(
+        pygame.USEREVENT + 1,
+        3000,
+    )
     while True:
         pygame.time.Clock().tick(120)
         for event in pygame.event.get():
@@ -60,6 +79,12 @@ def Game(screen, data):
                 elif event.key == pygame.K_d:
                     DDown = False
 
+            if event.type == pygame.USEREVENT + 1:
+                if len(zombies) < 10:
+                    zombies.append(Zombie("WeakZombie", random.choice(spawnPoints)))
+
+                pygame.time.set_timer(pygame.USEREVENT + 1, 3000)
+
         if WDown:
             player_pos = (player_pos[0], player_pos[1] + 5)
             player.direction = "Back"
@@ -79,16 +104,14 @@ def Game(screen, data):
             player.currentState = "Idle"
 
         screen.fill((0, 0, 0))
-        for i in range(len(Maps)):
+        for i in range(3):
             screen.blit(
-                MapsImage[i],
-                (
-                    Maps[i][0]
-                    + min(max(player_pos[0], -1), 1) * (abs(player_pos[0]) % 100),
-                    Maps[i][1]
-                    + min(max(player_pos[1], -1), 1) * (abs(player_pos[1]) % 100),
-                ),
+                Map, (player_pos[0] % 1200 - (1200 * i), player_pos[1] % 675 - 675)
             )
+            screen.blit(
+                Map, (player_pos[0] % 1200 - (1200 * i), player_pos[1] % 675 + 675)
+            )
+            screen.blit(Map, (player_pos[0] % 1200 - (1200 * i), player_pos[1] % 675))
 
         for v in zombies:
             if (

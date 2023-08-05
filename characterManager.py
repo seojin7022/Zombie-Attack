@@ -25,7 +25,7 @@ class Character(Sprite):
         self.Guis = GUI(list(self.animation.values())[0][0].get_size())
         self.data = {}
 
-        self.HPBar = GUI((100, 10))
+        self.HPBar = GUI((self.Guis.get_width(), 15))
         self.HPBar.fill((0, 255, 0))
 
         self.Guis.add(self.HPBar, 0)
@@ -85,9 +85,14 @@ class Character(Sprite):
     def Damage(self, dmg):
         if self.hp - dmg > 0:
             self.hp -= dmg
-            self.HPBar = pygame.transform.scale(
-                self.HPBar, ((self.hp / self.data["Hp"]) * 100, 10)
+            self.HPBar = GUI(
+                (
+                    (self.hp / self.data["Hp"]) * (self.HPBar.get_width()),
+                    self.HPBar.get_height(),
+                )
             )
+            self.HPBar.fill((0, 255, 0))
+
             self.Guis.add(self.HPBar, 0)
         else:
             self.hp = 0
