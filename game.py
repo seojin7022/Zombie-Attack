@@ -1,5 +1,8 @@
-import pygame, gameMath
+import pygame, gameMath, gameOver
 from characterManager import Character, Zombie, Equipment
+from guiManager import GUI, Button
+
+pygame.init()
 
 
 def createMap():
@@ -22,8 +25,8 @@ zombies = []
 def Game(screen, data):
     global player_pos, WDown, SDown, ADown, DDown
     zombies.append(Zombie("WeakZombie", (0, 300)))
-    player = Character("WeakZombie", (500, 200), currentState="Walk")
-    player.equipments.append(Equipment("Sword"))
+    player = Character("Player", (500, 200))
+    player.data = data
     while True:
         pygame.time.Clock().tick(120)
         for event in pygame.event.get():
@@ -59,17 +62,21 @@ def Game(screen, data):
 
         if WDown:
             player_pos = (player_pos[0], player_pos[1] + 5)
+            player.direction = "Back"
         if SDown:
             player_pos = (player_pos[0], player_pos[1] - 5)
+            player.direction = "Front"
         if ADown:
             player_pos = (player_pos[0] + 5, player_pos[1])
+            player.direction = "Left"
         if DDown:
             player_pos = (player_pos[0] - 5, player_pos[1])
+            player.direction = "Right"
 
         if WDown or SDown or ADown or DDown:
-            player.NextFrame()
+            player.currentState = "Idle"  # 추후에 Walk 이미지로 교체
         else:
-            player.StopAnimation()
+            player.currentState = "Idle"
 
         screen.fill((0, 0, 0))
         for i in range(len(Maps)):
@@ -84,9 +91,23 @@ def Game(screen, data):
             )
 
         for v in zombies:
-            v.pos = gameMath.GetPositionWithDistance(
-                v.pos, (player_pos[0], player_pos[1]), 2
-            )
+            if (
+                gameMath.GetDistance(v.pos, (player_pos[0], player_pos[1]))
+                <= v.data["Range"]
+            ):
+                v.currentState = "Walk"  # 나중에 Attack 으로 수정
+
+                if (
+                    pygame.time.get_ticks() - v.attackCooldown
+                    >= v.data["AttackCooldown"]
+                ):
+                    v.attackCooldown = pygame.time.get_ticks()
+                    player.Damage(v.data["Attack"])
+                    print(player.hp)
+            else:
+                v.pos = gameMath.GetPositionWithDistance(
+                    v.pos, (player_pos[0], player_pos[1]), v.data["Speed"]
+                )
             screen.blit(
                 v.PlayAnimation(),
                 (
@@ -97,4 +118,20 @@ def Game(screen, data):
         screen.blit(player.PlayAnimation(), player.pos)
         for v in player.equipments:
             screen.blit(v.image, player.pos)
+
+        for v in zombies:
+            v.Guis.update()
+            screen.blit(
+                v.Guis,
+                (
+                    500 + player_pos[0] - v.pos[0],
+                    200 + player_pos[1] - v.pos[1],
+                ),
+            )
+        player.Guis.update()
+        screen.blit(player.Guis, (player.pos))
+
+        if player.hp <= 0:
+            gameOver.GameOver(screen)
+
         pygame.display.flip()

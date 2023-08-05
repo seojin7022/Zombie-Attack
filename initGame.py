@@ -41,4 +41,6 @@ else:
     with open(f"./data/player-data.txt", "w") as playerData:
         playerData.write(json.dumps(datas))
 
+data["PlayerData"].update({"Hp": data["PlayerData"]["Stats"]["Defense"] * 100})
+
 print("✅ Initialized Successfully")

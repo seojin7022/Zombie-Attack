@@ -22,13 +22,12 @@ while isRunning:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if StartButton.get_bounding_rect().collidepoint(event.pos):
-                isRunning = game.Game(screen, initGame.data)
+                isRunning = game.Game(screen, initGame.data["PlayerData"])
 
-    screen.fill((210, 129, 0))
+    screen.fill((0, 0, 0))
     screen.blit(GameLobby_bg, (0, 0))
     screen.blit(StartButton, (0, 0))
     screen.blit(OptionButton, (0, 0))
-
     pygame.display.flip()
 
 with open(f"./data/player-data.txt", "w") as playerData:
