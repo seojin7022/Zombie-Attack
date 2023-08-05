@@ -44,7 +44,7 @@ def Game(screen, data):
 
     pygame.time.set_timer(
         pygame.USEREVENT + 1,
-        3000,
+        1000,
     )
     while True:
         pygame.time.Clock().tick(120)
@@ -80,10 +80,10 @@ def Game(screen, data):
                     DDown = False
 
             if event.type == pygame.USEREVENT + 1:
-                if len(zombies) < 10:
+                if len(zombies) < 30:
                     zombies.append(Zombie("WeakZombie", random.choice(spawnPoints)))
 
-                pygame.time.set_timer(pygame.USEREVENT + 1, 3000)
+                pygame.time.set_timer(pygame.USEREVENT + 1, 500)
 
         if WDown:
             player_pos = (player_pos[0], player_pos[1] + 5)

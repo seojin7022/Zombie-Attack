@@ -39,14 +39,14 @@ class Character(Sprite):
                 animation.update(
                     {
                         animationName: [
-                            pygame.image.load(f"./img/Characters/{self.name}/{i}", i)
+                            pygame.image.load(f"./img/Characters/{self.name}/{i}", i).convert_alpha()
                         ]
                     }
                 )
 
             else:
                 animation[animationName].append(
-                    pygame.image.load(f"./img/Characters/{self.name}/{i}", i)
+                    pygame.image.load(f"./img/Characters/{self.name}/{i}", i).convert_alpha()
                 )
             # animation[i.split(".")[0].rstrip(i.split(".")[0][-1])].append(
             #     pygame.image.load(f"./img/Characters/{self.name}/{i}", i)
