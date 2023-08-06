@@ -5,12 +5,15 @@ zombies = {
         "Speed": 1,
         "Range": 1,
         "AttackCooldown": 120 * 1,
+        "Reward": {
+            "Coin": 100,
+        }
     }
 }
 
 Weapons = {
     "Sword": {
-        "Attack": [20, 1],
+        "Attack": [10, 1],
         "Range": 50
     }
 }

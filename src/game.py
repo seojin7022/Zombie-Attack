@@ -1,6 +1,7 @@
-import pygame, gameMath, gameOver, random
-from characterManager import *
-from guiManager import GUI, Button
+import pygame, random
+from src import gameMath, gameOver
+from src.characterManager import *
+from src.guiManager import GUI, Button, Text
 
 pygame.init()
 
@@ -9,7 +10,7 @@ def createMap():
     return pygame.image.load(f"./img/Tile1.png")
 
 
-player_pos = (0, 0)
+
 
 Maps = [((i - 1) * 100, (j - 1) * 100) for i in range(15) for j in range(10)]
 MapsImage = [(createMap(), Maps[i]) for i in range(150)]
@@ -22,8 +23,7 @@ SDown = False
 ADown = False
 DDown = False
 
-zombies = []
-GUIs = []
+
 
 spawnPoints = [
     (-700, -500),
@@ -42,6 +42,9 @@ spawnPoints = [
 
 def Game(screen, data):
     global player_pos, WDown, SDown, ADown, DDown
+    zombies = []
+    GUIs = []
+    player_pos = (0, 0)
     player = Character("Player", (500, 200))
     player.data = data
     player.Equip(Weapon("Sword"))
@@ -52,7 +55,12 @@ def Game(screen, data):
     TopGreyBar = GUI((TopBar.get_width(), 70))
     TopGreyBar.fill((60, 60, 60))
 
-    TopBar.blit(TopGreyBar, (0, 0))
+    CoinText = Text((TopBar.get_width(), TopGreyBar.get_height()),str(player.data["Coin"]), (200, 200, 0) )
+    CoinText.pos = (50, CoinText.get_height() / 4)
+
+    TopBar.add(TopGreyBar, 0)
+    TopBar.add(CoinText, 1)
+
 
     pygame.time.set_timer(
         pygame.USEREVENT + 1,
@@ -162,6 +170,8 @@ def Game(screen, data):
                             isDead = i.Damage(damage)
 
                             if isDead:
+                                i.Reward(player)
+                                CoinText.text = str(player.data["Coin"])
                                 zombies.remove(i)
 
         for v in zombies:
@@ -175,11 +185,16 @@ def Game(screen, data):
             )
         player.Guis.update()
         screen.blit(player.Guis, (player.pos))
-
         for i in GUIs:
+            i.update()
             screen.blit(i, (0, 0))
 
         if player.hp <= 0:
-            gameOver.GameOver(screen)
+            if gameOver.GameOver(screen):
+                Game(screen, data)
+                return False
+            else:
+                return False
 
         pygame.display.flip()
+

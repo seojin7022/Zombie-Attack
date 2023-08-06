@@ -14,7 +14,10 @@ class GUI(pygame.Surface):
         self.fill((0, 0, 0, 0))
         for i in self.children:
             if i != None:
-                self.blit(i, i.pos)
+                if type(i) == Text:
+                    self.blit(i.update(), i.pos)
+                else:
+                    self.blit(i, i.pos)
 
 
 class Button(GUI):
@@ -34,3 +37,19 @@ class Button(GUI):
         else:
             self.fill((0, 0, 0, 0))
             self.blit(self.image, (0, 0))
+
+    def Click(self, mousePos):
+        if self.image.get_bounding_rect().collidepoint(mousePos):
+            return True
+        return False
+
+class Text(GUI):
+    def __init__(self, size, text, color=(255, 255, 255), pos=(0, 0), fontSize = 1) -> None:
+        super().__init__(size, pos)
+
+        self.font = pygame.font.SysFont("arial", 30, True)
+        self.text = text
+        self.color = color
+    
+    def update(self):
+        return self.font.render(self.text, True, self.color)

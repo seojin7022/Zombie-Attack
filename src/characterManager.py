@@ -1,5 +1,6 @@
-import pygame, os, gameData
-from guiManager import GUI, Button
+import pygame, os
+from src import gameData
+from src.guiManager import GUI, Button
 
 tick = 50
 
@@ -118,7 +119,8 @@ class Zombie(Character):
         self.NextFrame()
         return newAnimation[self.animationNum]
     
-
+    def Reward(self, player):
+        player.data["Coin"] += self.data["Reward"]["Coin"]
 
 
 
