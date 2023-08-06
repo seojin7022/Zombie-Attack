@@ -7,3 +7,10 @@ zombies = {
         "AttackCooldown": 120 * 1,
     }
 }
+
+Weapons = {
+    "Sword": {
+        "Attack": [20, 1],
+        "Range": 50
+    }
+}

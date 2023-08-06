@@ -1,5 +1,5 @@
 import pygame, gameMath, gameOver, random
-from characterManager import Character, Zombie, Equipment
+from characterManager import *
 from guiManager import GUI, Button
 
 pygame.init()
@@ -23,6 +23,7 @@ ADown = False
 DDown = False
 
 zombies = []
+GUIs = []
 
 spawnPoints = [
     (-700, -500),
@@ -37,10 +38,21 @@ spawnPoints = [
 ]
 
 
+
+
 def Game(screen, data):
     global player_pos, WDown, SDown, ADown, DDown
     player = Character("Player", (500, 200))
     player.data = data
+    player.Equip(Weapon("Sword"))
+
+    TopBar = GUI(screen.get_size())
+    GUIs.append(TopBar)
+
+    TopGreyBar = GUI((TopBar.get_width(), 70))
+    TopGreyBar.fill((60, 60, 60))
+
+    TopBar.blit(TopGreyBar, (0, 0))
 
     pygame.time.set_timer(
         pygame.USEREVENT + 1,
@@ -141,6 +153,16 @@ def Game(screen, data):
         screen.blit(player.PlayAnimation(), player.pos)
         for v in player.equipments:
             screen.blit(v.image, player.pos)
+            if type(v) == Weapon:
+                isMouseClicked, damage = v.NormalAttack()
+
+                if isMouseClicked:
+                    for i in zombies:
+                        if gameMath.GetDistance(player_pos, i.pos) <= v.data["Range"]:
+                            isDead = i.Damage(damage)
+
+                            if isDead:
+                                zombies.remove(i)
 
         for v in zombies:
             v.Guis.update()
@@ -153,6 +175,9 @@ def Game(screen, data):
             )
         player.Guis.update()
         screen.blit(player.Guis, (player.pos))
+
+        for i in GUIs:
+            screen.blit(i, (0, 0))
 
         if player.hp <= 0:
             gameOver.GameOver(screen)

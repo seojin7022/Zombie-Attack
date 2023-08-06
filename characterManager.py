@@ -9,6 +9,12 @@ class Sprite:
         self.name = name
         self.animation = {}
 
+class Equipment:
+    def __init__(self, name) -> None:
+        self.image = pygame.image.load(f"./img/{name}.PNG")
+        self.pos = (0, 0)
+        self.data = gameData.Weapons[name]
+        self.player = None
 
 class Character(Sprite):
     def __init__(self, name, pos=(0, 0), currentState="Idle"):
@@ -48,9 +54,6 @@ class Character(Sprite):
                 animation[animationName].append(
                     pygame.image.load(f"./img/Characters/{self.name}/{i}", i).convert_alpha()
                 )
-            # animation[i.split(".")[0].rstrip(i.split(".")[0][-1])].append(
-            #     pygame.image.load(f"./img/Characters/{self.name}/{i}", i)
-            # )
 
         return animation
 
@@ -94,8 +97,14 @@ class Character(Sprite):
             self.HPBar.fill((0, 255, 0))
 
             self.Guis.add(self.HPBar, 0)
+            return False
         else:
             self.hp = 0
+            return True
+
+    def Equip(self, equipment: Equipment):
+        self.equipments.append(equipment)
+        equipment.player = self
 
 
 class Zombie(Character):
@@ -108,9 +117,21 @@ class Zombie(Character):
         newAnimation = self.animation[self.direction + self.currentState]
         self.NextFrame()
         return newAnimation[self.animationNum]
+    
 
 
-class Equipment:
+
+
+
+
+class Weapon(Equipment):
     def __init__(self, name) -> None:
-        self.image = pygame.image.load(f"./img/{name}.PNG")
-        self.pos = (0, 0)
+        super().__init__(name)
+
+    def NormalAttack(self):
+        mouse = pygame.mouse.get_pressed()[0]
+
+        if mouse:
+            return mouse, self.data["Attack"][0] + self.player.data["Stats"]["Attack"] * self.data["Attack"][1]
+        else:
+            return False, 0
