@@ -1,1 +1,1 @@
-{"PlayerData": {"Stats": {"Attack": 1, "Defense": 1}, "Mastery": {}, "Coin": 22600, "ZombieStone": 0, "Equipments": [], "Magics": {}, "Hp": 100}}
+{"PlayerData": {"Stats": {"Attack": 1, "Defense": 1}, "Mastery": {}, "Coin": 45900, "ZombieStone": 0, "Equipments": [], "Magics": {}, "Hp": 100}}

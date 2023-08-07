@@ -37,7 +37,7 @@ spawnPoints = [
     (0, 500),
 ]
 
-
+COINTEXT=2
 
 
 def Game(screen, data):
@@ -47,20 +47,38 @@ def Game(screen, data):
     player_pos = (0, 0)
     player = Character("Player", (500, 200))
     player.data = data
-    player.Equip(Weapon("Sword"))
+    Sword = Weapon("Sword")
+    Sword.pos = (15, 40)
+    player.Equip(Sword)
 
     TopBar = GUI(screen.get_size())
     GUIs.append(TopBar)
+    #Gray Color Bar
+    TopGrayBar = GUI((TopBar.get_width(), 70))
+    TopGrayBar.fill((104, 104, 104))
 
-    TopGreyBar = GUI((TopBar.get_width(), 70))
-    TopGreyBar.fill((60, 60, 60))
+    #Coin And Crystal Values
+    Value = GUI(TopBar.get_size())
+    Value.blit(pygame.image.load(f"./img/GUIs/Value.PNG").convert_alpha(), (0, 0))
 
-    CoinText = Text((TopBar.get_width(), TopGreyBar.get_height()),str(player.data["Coin"]), (200, 200, 0) )
-    CoinText.pos = (50, CoinText.get_height() / 4)
+    #Coin Text
+    CoinText = Text((TopBar.get_width(), TopGrayBar.get_height()),str(player.data["Coin"]), (220, 170, 79), fontSize=40 )
+    CoinText.pos = (120, CoinText.get_height() / 4)
 
-    TopBar.add(TopGreyBar, 0)
-    TopBar.add(CoinText, 1)
+    #Setting Button
+    SettingButton = Button("SettingButton")
 
+    #MenuButton
+    MenuButton = Button("MenuButton")
+    
+
+    #Add Elements to TopBar
+    TopBar.add(TopGrayBar, 0)
+    TopBar.add(Value, 1)
+    TopBar.add(CoinText, COINTEXT)
+    TopBar.add(SettingButton, 3)
+    
+    # GUIs.append(MenuButton)
 
     pygame.time.set_timer(
         pygame.USEREVENT + 1,
@@ -160,7 +178,7 @@ def Game(screen, data):
             )
         screen.blit(player.PlayAnimation(), player.pos)
         for v in player.equipments:
-            screen.blit(v.image, player.pos)
+            screen.blit(v.image, (player.pos[0] + v.pos[0], player.pos[1] + v.pos[1]))
             if type(v) == Weapon:
                 isMouseClicked, damage = v.NormalAttack()
 
@@ -171,7 +189,7 @@ def Game(screen, data):
 
                             if isDead:
                                 i.Reward(player)
-                                CoinText.text = str(player.data["Coin"])
+                                GUIs[0].children[COINTEXT].text = str(player.data["Coin"])
                                 zombies.remove(i)
 
         for v in zombies:
@@ -186,7 +204,7 @@ def Game(screen, data):
         player.Guis.update()
         screen.blit(player.Guis, (player.pos))
         for i in GUIs:
-            i.update()
+            # i.update()
             screen.blit(i, (0, 0))
 
         if player.hp <= 0:
