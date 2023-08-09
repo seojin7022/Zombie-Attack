@@ -2,21 +2,22 @@ import pygame, random
 from src import gameMath, gameOver
 from src.characterManager import *
 from src.guiManager import GUI, Button, Text
+from src.level import Level
 
 pygame.init()
 
 
-def createMap():
-    return pygame.image.load(f"./img/Tile1.png")
+# def createMap():
+#     return pygame.image.load(f"./img/Tile1.png")
 
 
 
 
-Maps = [((i - 1) * 100, (j - 1) * 100) for i in range(15) for j in range(10)]
-MapsImage = [(createMap(), Maps[i]) for i in range(150)]
+# Maps = [((i - 1) * 100, (j - 1) * 100) for i in range(15) for j in range(10)]
+# MapsImage = [(createMap(), Maps[i]) for i in range(150)]
 
-Map = pygame.Surface((1200, 675))
-Map.blits(MapsImage)
+# Map = pygame.Surface((1200, 675))
+# Map.blits(MapsImage)
 
 WDown = False
 SDown = False
@@ -38,6 +39,8 @@ spawnPoints = [
 ]
 
 COINTEXT=2
+
+level = Level()
 
 
 def Game(screen, data):
@@ -78,7 +81,9 @@ def Game(screen, data):
     TopBar.add(CoinText, COINTEXT)
     TopBar.add(SettingButton, 3)
     
-    # GUIs.append(MenuButton)
+    TopBar.add(MenuButton, 4)
+
+    GUIs.append(TopBar)
 
     pygame.time.set_timer(
         pygame.USEREVENT + 1,
@@ -142,14 +147,15 @@ def Game(screen, data):
             player.currentState = "Idle"
 
         screen.fill((0, 0, 0))
-        for i in range(3):
-            screen.blit(
-                Map, (player_pos[0] % 1200 - (1200 * i), player_pos[1] % 675 - 675)
-            )
-            screen.blit(
-                Map, (player_pos[0] % 1200 - (1200 * i), player_pos[1] % 675 + 675)
-            )
-            screen.blit(Map, (player_pos[0] % 1200 - (1200 * i), player_pos[1] % 675))
+        level.run()
+        # for i in range(3):
+        #     screen.blit(
+        #         Map, (player_pos[0] % 1200 - (1200 * i), player_pos[1] % 675 - 675)
+        #     )
+        #     screen.blit(
+        #         Map, (player_pos[0] % 1200 - (1200 * i), player_pos[1] % 675 + 675)
+        #     )
+        #     screen.blit(Map, (player_pos[0] % 1200 - (1200 * i), player_pos[1] % 675))
 
         for v in zombies:
             if (
@@ -204,7 +210,7 @@ def Game(screen, data):
         player.Guis.update()
         screen.blit(player.Guis, (player.pos))
         for i in GUIs:
-            # i.update()
+            i.update()
             screen.blit(i, (0, 0))
 
         if player.hp <= 0:
@@ -214,5 +220,5 @@ def Game(screen, data):
             else:
                 return False
 
-        pygame.display.flip()
+        pygame.display.update()
 

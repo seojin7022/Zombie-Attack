@@ -1,6 +1,6 @@
 import pygame, json
 
-from src import initGame, game
+# from src import initGame, game
 pygame.init()
 
 window_size = (1200, 675)
@@ -23,11 +23,13 @@ while isRunning:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if StartButton.get_bounding_rect().collidepoint(event.pos):
-                isRunning = game.Game(screen, initGame.data["PlayerData"])
+                # isRunning = game.Game(screen, initGame.data["PlayerData"])
                 break
 
     if not isRunning:
         break
+
+    print("GOod")
 
     screen.fill((0, 0, 0))
     screen.blit(GameLobby_bg, (0, 0))
@@ -36,4 +38,5 @@ while isRunning:
     pygame.display.flip()
 
 with open(f"./data/player-data.txt", "w") as playerData:
-    playerData.write(json.dumps(initGame.data))
+    # playerData.write(json.dumps(initGame.data))
+    pass
