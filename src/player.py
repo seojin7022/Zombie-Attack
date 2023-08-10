@@ -1,14 +1,14 @@
 import pygame
+from pygame._sdl2.video import *
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, obstacle_sprites) -> None:
+    def __init__(self, app, pos, groups, obstacle_sprites) -> None:
         super().__init__(groups)
-        self.image = pygame.image.load(f"./img/Characters/Dog.PNG").convert_alpha()
-        self.rect = self.image.get_bounding_rect()
-        self.image = pygame.transform.scale(self.image, (self.rect.width / 3, self.rect.height / 3))
+        self.image = Image(Texture.from_surface(app.renderer, pygame.transform.scale_by(pygame.image.load(f"./img/Characters/Dog.PNG"), (0.3, 0.3))))
+        self.image.srcrect.scale_by(0.1, 0.1)
         self.rect = self.image.get_rect()
         self.rect.bottomleft = pos
-        self.hitbox = self.rect.inflate(-20, -100)
+        self.hitbox = self.rect.inflate(-130, -100)
 
         self.direction = pygame.math.Vector2()
         self.speed = 5
@@ -28,14 +28,14 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_d]:
             self.direction.x = 1
-            if self.isFliped:
-                self.isFliped = False
-                self.image = pygame.transform.flip(self.image, True, False)
+            
+            if self.image.flip_x:
+                self.image.flip_x = False
+                
         elif keys[pygame.K_a]:
             self.direction.x = -1
-            if not self.isFliped:
-                self.isFliped = True
-                self.image = pygame.transform.flip(self.image, True, False)
+            if not self.image.flip_x:
+                self.image.flip_x = True
         else:
             self.direction.x = 0
 

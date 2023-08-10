@@ -1,16 +1,20 @@
 import pygame, sys
+from pygame._sdl2.video import Renderer, Image, Texture, Window
 from src.settings import *
 from src.level import Level
 pygame.init()
 class Game:
     def __init__(self):
+        self.window = Window(size=(1920, 1000))
+        self.window.maximize()
         
-        
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF | pygame.FULLSCREEN)
+        self.renderer = Renderer(self.window)
+        self.renderer.draw_color = (0, 0, 0, 255)
+        # self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF | pygame.FULLSCREEN)
         pygame.display.set_caption("Zombie Attack")
         self.clock = pygame.time.Clock()
 
-        self.level = Level()
+        self.level = Level(self)
 
     def run(self):
         while True:
@@ -18,13 +22,14 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-
-            self.screen.fill('black')
+            self.renderer.clear()
+            self.renderer.fill_rect(pygame.Rect(0, 0, 1920, 1080))
             self.level.run()
-            pygame.display.update()
+            self.renderer.present()
             self.clock.tick(FPS)
 
 
 if __name__ == "__main__":
     game = Game()
     game.run()
+
