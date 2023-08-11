@@ -1,18 +1,17 @@
 import pygame
-from pygame._sdl2.video import *
+from pygame._sdl2 import *
 from src.settings import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, app, pos, groups, obstacle_sprites) -> None:
         super().__init__(groups)
         self.image = Image(Texture.from_surface(app.renderer, pygame.transform.scale(pygame.image.load(f"./img/Characters/Dog.PNG"), (TILESIZE, TILESIZE * 1.7))))
-        self.image.srcrect.scale_by(0.1, 0.1)
         self.rect = self.image.get_rect()
-        self.rect.bottomleft = pos
-        self.hitbox = self.rect.inflate(-130, -100)
+        self.rect.bottomright = pos
+        self.hitbox = self.rect.inflate(0, 0)
 
         self.direction = pygame.math.Vector2()
-        self.speed = 5
+        self.speed = 3
         self.isFliped = False
 
         self.obstacle_sprites = obstacle_sprites

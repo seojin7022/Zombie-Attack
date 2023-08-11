@@ -1,5 +1,5 @@
 import pygame, sys
-from pygame._sdl2.video import Renderer, Image, Texture, Window
+from pygame._sdl2 import Renderer, Image, Texture, Window
 from src.settings import *
 from src.level import Level
 pygame.init()
@@ -7,8 +7,10 @@ class Game:
     def __init__(self):
         self.window = Window(size=(WIDTH, HEIGHT))
         self.window.maximize()
+        self.window.title = "Magical Library"
         
         self.renderer = Renderer(self.window)
+        self.renderer.scale = (2,2)
         self.renderer.draw_color = (0, 0, 0, 255)
         # self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF | pygame.FULLSCREEN)
         pygame.display.set_caption("Zombie Attack")
