@@ -5,6 +5,12 @@ from src.tile import Tile, BG
 from src.player import Player
 from src.debug import debug
 
+floor = pygame.Surface((TILESIZE * 50, TILESIZE * 50))
+
+for i in range(-25, 25):
+    for j in range(-25, 25):
+        floor.blit(pygame.image.load(f"./img/Tile/PurpleTile.png"), (j * TILESIZE, i * TILESIZE))
+
 class Level:
     def __init__(self, app) -> None:
         
@@ -18,7 +24,6 @@ class Level:
         self.create_map()
 
     def create_map(self):
-        BG(self.app, self.visible_sprites)
         with open(f"./data/MapData.txt", "r") as Map:
             
             MapData = Map.readlines()
@@ -48,10 +53,22 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.half_height = self.window.size[1] // 2
         self.offset = pygame.math.Vector2()
 
+        self.floor_Image = Image(Texture.from_surface(self.renderer, floor))
+        self.floor_rect = self.floor_Image.get_rect()
+        self.floor_rect.topleft = (0 ,0)
+
     def custom_draw(self, player):
-        self.offset.x = player.rect.centerx - self.half_width
-        self.offset.y = player.rect.centery - self.half_height
+        self.offset.x = player.rect.left - self.half_width
+        self.offset.y = player.rect.top - self.half_height
+        print(self.floor_rect.topleft)
+        offset = self.floor_rect.topleft -self.offset
+        rect = self.floor_rect.copy()
+        rect.topleft = offset
+        # print(self.floor_rect.topleft)
+        self.renderer.blit(self.floor_Image, rect)
 
         for sprite in self.sprites():
-            # sprite.rect.topleft -= self.offset
-            self.renderer.blit(sprite.image, sprite.rect)
+            offset = sprite.rect.topleft -self.offset
+            rect = sprite.rect.copy()
+            rect.topleft = offset
+            self.renderer.blit(sprite.image, rect)

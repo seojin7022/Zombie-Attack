@@ -5,7 +5,7 @@ from src.level import Level
 pygame.init()
 class Game:
     def __init__(self):
-        self.window = Window(size=(1920, 1000))
+        self.window = Window(size=(WIDTH, HEIGHT))
         self.window.maximize()
         
         self.renderer = Renderer(self.window)
@@ -23,7 +23,6 @@ class Game:
                     pygame.quit()
                     sys.exit()
             self.renderer.clear()
-            self.renderer.fill_rect(pygame.Rect(0, 0, 1920, 1080))
             self.level.run()
             self.renderer.present()
             self.clock.tick(FPS)
