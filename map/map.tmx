@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="left-up" width="50" height="40" tilewidth="64" tileheight="64" infinite="0" nextlayerid="4" nextobjectid="10">
- <tileset firstgid="1" source="C:/Users/Jin/Documents/PurpleTile.tsx"/>
+ <tileset firstgid="1" source="./PurpleTile.tsx"/>
  <tileset firstgid="2" source="BoxNew.tsx"/>
  <layer id="1" name="Floor" width="50" height="40">
   <data encoding="csv">
