@@ -28,8 +28,13 @@ class Level:
         for layer in self.tmx_data.layers:
             if hasattr(layer, "data"):
                 for x, y, surf in layer.tiles():
-                    print(x, y, surf)
-                    Tile(self.app, (x * TILESIZE, y * TILESIZE), [self.visible_sprites], surf)
+                    if layer.name == "Floor":
+                        Tile(self.app, (x * TILESIZE, y * TILESIZE), [self.visible_sprites], surf)
+                    if layer.name == "Box":
+                        print(self.tmx_data.get_tile_colliders())
+                        Tile(self.app, (x * TILESIZE, y * TILESIZE), [self.visible_sprites, self.obstacles_sprites], surf)
+
+                
 
         for obj in self.tmx_data.objects:
             if obj.name == "Player":

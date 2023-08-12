@@ -10,10 +10,8 @@ class Game:
         self.window.title = "Magical Library"
         
         self.renderer = Renderer(self.window)
-        self.renderer.scale = (2,2)
+        self.renderer.scale = (1.5,1.5)
         self.renderer.draw_color = (0, 0, 0, 255)
-        # self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF | pygame.FULLSCREEN)
-        pygame.display.set_caption("Zombie Attack")
         self.clock = pygame.time.Clock()
 
         self.level = Level(self)

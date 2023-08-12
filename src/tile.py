@@ -6,8 +6,13 @@ class Tile(pygame.sprite.Sprite):
     def __init__(self, app, pos, groups, texture) -> None:
         super().__init__(groups)
         self.image: Image = Image(texture.texture)
+        self.image.srcrect.width = TILESIZE
+        self.image.srcrect.height = TILESIZE
+        self.image.srcrect.top = texture.srcrect.top
+        # self.image.srcrect = 
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
+        self.hitbox = self.rect.inflate(0, 0)
 
 class BG(pygame.sprite.Sprite):
     def __init__(self, app, groups) -> None:
