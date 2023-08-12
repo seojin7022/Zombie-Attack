@@ -24,14 +24,17 @@ class Level:
 
     def create_map(self):
         self.tmx_data = load_pygame_sdl2(self.renderer, f"map/map.tmx")
-
+        
         for layer in self.tmx_data.layers:
             if hasattr(layer, "data"):
+                for i in layer.tiles():
+                    print(i)
+                
                 for x, y, surf in layer.tiles():
                     if layer.name == "Floor":
                         Tile(self.app, (x * TILESIZE, y * TILESIZE), [self.visible_sprites], surf)
                     if layer.name == "Box":
-                        print(self.tmx_data.get_tile_colliders())
+                        print(layer.id)
                         Tile(self.app, (x * TILESIZE, y * TILESIZE), [self.visible_sprites, self.obstacles_sprites], surf)
 
                 

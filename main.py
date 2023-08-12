@@ -1,3 +1,5 @@
+import src.install
+
 import pygame, sys
 from pygame._sdl2 import Renderer, Image, Texture, Window
 from src.settings import *
