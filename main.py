@@ -12,7 +12,7 @@ class Game:
         self.window.title = "Magical Library"
         
         self.renderer = Renderer(self.window)
-        self.renderer.scale = (1.5,1.5)
+        self.renderer.scale = (3,3)
         self.renderer.draw_color = (0, 0, 0, 255)
         self.clock = pygame.time.Clock()
 

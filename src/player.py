@@ -5,7 +5,7 @@ from src.settings import *
 class Player(pygame.sprite.Sprite):
     def __init__(self, app, pos, groups, obstacle_sprites) -> None:
         super().__init__(groups)
-        self.image = Image(Texture.from_surface(app.renderer, pygame.transform.scale(pygame.image.load(f"./img/Characters/Dog.PNG"), (TILESIZE, TILESIZE * 1.7))))
+        self.image = Image(Texture.from_surface(app.renderer, pygame.transform.scale(pygame.image.load(f"./img/Characters/Dog.PNG"), (TILESIZE, TILESIZE))))
         self.rect = self.image.get_rect()
         self.rect.bottomright = pos
         self.hitbox = self.rect.inflate(0, 0)

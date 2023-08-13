@@ -53,16 +53,22 @@ class YSortCameraGroup(pygame.sprite.Group):
         
         self.window = app.window
         self.renderer = app.renderer
-        self.half_width = self.window.size[0] // 4
-        self.half_height = self.window.size[1] // 4
+        self.half_width = self.window.size[0] // 2
+        self.half_height = self.window.size[1] // 2
         self.offset = pygame.math.Vector2()
+        
 
     def custom_draw(self, player):
-        self.offset.x = player.rect.left - self.half_width
-        self.offset.y = player.rect.top - self.half_height
+        self.offset.x = player.rect.centerx - self.half_width / self.renderer.scale[0]
+        self.offset.y = player.rect.centery - self.half_height / self.renderer.scale[1]
+
+        
 
         for sprite in self.sprites():
-            offset = sprite.rect.topleft -self.offset
+            offset = sprite.rect.center -self.offset
+            
             rect = sprite.rect.copy()
-            rect.topleft = offset
+            rect.center = offset
+            if sprite == player:
+                print(rect)
             self.renderer.blit(sprite.image, rect)
