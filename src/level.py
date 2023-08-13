@@ -4,7 +4,7 @@ from src.settings import *
 from src.tile import Tile, BG
 from src.player import Player
 from src.debug import debug
-from pytmx.util_pygame_sdl2 import load_pygame_sdl2
+from pytmx.util_pygame_sdl2 import load_pygame_sdl2, PygameSDL2Tile
 
 
 class Level:
@@ -15,7 +15,7 @@ class Level:
         self.renderer = app.renderer
 
         
-            
+        
 
         self.visible_sprites = YSortCameraGroup(app)
         self.obstacles_sprites = pygame.sprite.Group()
@@ -23,19 +23,24 @@ class Level:
         self.create_map()
 
     def create_map(self):
-        self.tmx_data = load_pygame_sdl2(self.renderer, f"map/map.tmx")
-        
+        self.tmx_data = load_pygame_sdl2(self.renderer, f"./map/map.tmx")
+
+
         for layer in self.tmx_data.layers:
             if hasattr(layer, "data"):
-                for i in layer.tiles():
-                    print(i)
-                
                 for x, y, surf in layer.tiles():
                     if layer.name == "Floor":
                         Tile(self.app, (x * TILESIZE, y * TILESIZE), [self.visible_sprites], surf)
                     if layer.name == "Box":
-                        print(layer.id)
-                        Tile(self.app, (x * TILESIZE, y * TILESIZE), [self.visible_sprites, self.obstacles_sprites], surf)
+                        gid = self.tmx_data.get_tile_gid(x, y, self.tmx_data.layers.index(layer))
+                        newRect = pygame.Rect(0, 0, 0, 0)
+                        for id, collider_group in self.tmx_data.get_tile_colliders():
+                            if id == gid:
+                                newRect.width = collider_group[0].width
+                                newRect.height = collider_group[0].height
+                                print(collider_group[0].height)
+                        
+                        Tile(self.app, (x * TILESIZE, y * TILESIZE), [self.visible_sprites, self.obstacles_sprites], surf, newRect)
 
                 
 
@@ -69,6 +74,4 @@ class YSortCameraGroup(pygame.sprite.Group):
             
             rect = sprite.rect.copy()
             rect.center = offset
-            if sprite == player:
-                print(rect)
             self.renderer.blit(sprite.image, rect)

@@ -17,6 +17,7 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.level = Level(self)
+        
 
     def run(self):
         while True:

@@ -3,17 +3,17 @@
  <image source="Box1.png" width="64" height="192"/>
  <tile id="0" type="Box">
   <objectgroup draworder="index" id="2">
-   <object id="1" type="Box" x="0" y="0" width="64" height="64"/>
+   <object id="3" name="Collision" x="0" y="0" width="64" height="64"/>
   </objectgroup>
  </tile>
  <tile id="1" type="Box">
   <objectgroup draworder="index" id="2">
-   <object id="10" type="Box" x="0" y="0" width="64" height="36"/>
+   <object id="12" name="Collision" x="0" y="0" width="64" height="36"/>
   </objectgroup>
  </tile>
  <tile id="2" type="Box">
   <objectgroup draworder="index" id="2">
-   <object id="1" type="Box" x="0" y="0" width="64" height="64"/>
+   <object id="1" name="Collision" type="Box" x="0" y="0" width="64" height="64"/>
   </objectgroup>
  </tile>
 </tileset>
