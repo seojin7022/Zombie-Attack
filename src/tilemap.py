@@ -6,7 +6,7 @@ import xml.etree.ElementTree as elemTree
 def load_tilemap(path):
     with open(path, 'r') as tilemaps:
         tree = elemTree.fromstring(tilemaps.read())
-        tilesets = []
+        tilesets = [None for i in range(len(tree.findall("tileset")))]
         for i in tree.findall("tileset"):
             with open("./map/" + i.get("source"), 'r') as tileset:
             
@@ -20,7 +20,8 @@ def load_tilemap(path):
 
             for j in data:
                 for k in j.split(","):
-                    print(k)
+                    if k != "":
+                        print(tilesets[int(k)] != None)
             # for j in range(i.get("height")):
             #     for k in range(i.get("width")):
             #         pass
