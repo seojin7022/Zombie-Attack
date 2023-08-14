@@ -5,7 +5,7 @@ from src.tile import Tile, BG
 from src.player import Player
 from src.debug import debug
 from pytmx.util_pygame_sdl2 import load_pygame_sdl2, PygameSDL2Tile
-
+import cv2
 
 class Level:
     def __init__(self, app) -> None:
@@ -20,8 +20,18 @@ class Level:
         self.visible_sprites = YSortCameraGroup(app)
         self.obstacles_sprites = pygame.sprite.Group()
 
+        self.video = cv2.VideoCapture("./img/LoadingScreen.mp4")
+
         self.create_map()
 
+    def loading_screen(self):
+        ret, frame = self.video.read()
+
+        if ret:
+            image = pygame.image.frombytes(frame.tobytes(), (1920, 1080), "RGB")
+            self.renderer.blit(Texture.from_surface(self.renderer, image), pygame.Rect(0, 0, 1920 / self.renderer.scale[0], 1080 / self.renderer.scale[1]))
+        
+        return ret
     def create_map(self):
         self.tmx_data = load_pygame_sdl2(self.renderer, f"./map/map.tmx")
 
@@ -38,7 +48,6 @@ class Level:
                             if id == gid:
                                 newRect.width = collider_group[0].width
                                 newRect.height = collider_group[0].height
-                                print(collider_group[0].height)
                         
                         Tile(self.app, (x * TILESIZE, y * TILESIZE), [self.visible_sprites, self.obstacles_sprites], surf, newRect)
 
@@ -49,8 +58,13 @@ class Level:
                 self.player = Player(self.app, (obj.x, obj.y), [self.visible_sprites], self.obstacles_sprites)
 
     def run(self):
-        self.visible_sprites.custom_draw(self.player)
-        self.visible_sprites.update()
+        
+        
+        if (self.loading_screen()):
+            pass
+        else:
+            self.visible_sprites.custom_draw(self.player)
+            self.visible_sprites.update()
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self, app) -> None:
